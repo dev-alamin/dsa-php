@@ -50,3 +50,51 @@ $s = "a";
 $words = ["aa","aaaa","banana"];
 
 var_dump( isPrefixString($s, $words)  );
+
+// 38. Count and Say
+/**
+ * @param Integer $n
+ * @return String
+ */
+function countAndSay($n) {
+    $result = "1";
+    
+    for ($i = 2; $i <= $n; $i++) {
+        $current = "";
+        $count = 1;
+        $len = strlen($result);
+        
+        for ($j = 1; $j < $len; $j++) {
+            if ($result[$j] == $result[$j - 1]) {
+                $count++;
+            } else {
+                $current .= $count . $result[$j - 1];
+                $count = 1;
+            }
+        }
+        
+        // Don't forget to add the last group
+        $current .= $count . $result[$len - 1];
+        $result = $current;
+    }
+
+    return $result;
+}
+
+// 2042. Check if Numbers Are Ascending in a Sentence
+/**
+ * @param String $s
+ * @return Boolean
+ */
+function areNumbersAscending($s) {
+    $number = preg_match_all( '/[0-9]+/', $s, $match );
+    $arr = $match[0];
+    
+    for( $i = 1; $i < count( $arr ); $i++ ) {
+        if( ( (int) $arr[$i-1] >= (int) $arr[$i] ) ){
+            return false;
+        }
+    }
+    
+    return true;
+}
