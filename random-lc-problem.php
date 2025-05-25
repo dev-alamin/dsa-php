@@ -151,3 +151,57 @@ function findWordsContaining($words, $x) {
 $words = ["apple", "banana", "cherry", "date"];
 $x = "a";
 print_r(findWordsContaining($words, $x));
+
+
+
+// 2131. Longest Palindrome by Concatenating Two Letter Words
+/**
+ * You are given an array of strings words. 
+ * Each element of words consists of two lowercase English letters.
+* 
+* Create the longest possible palindrome by selecting some elements
+* from words and concatenating them in any order. Each element can be selected at most once.
+* 
+* Return the length of the longest palindrome that you can create. 
+* If it is impossible to create any palindrome, return 0.
+* 
+* A palindrome is a string that reads the same forward and backward.
+ *
+ * @param [type] $words
+ * @return void
+ */
+function longestPalindrome($words) {
+    $count = [];
+    $result = 0;
+    $centerUsed = false;
+
+    // Count frequencies
+    foreach ($words as $word) {
+        $count[$word] = ($count[$word] ?? 0) + 1;
+    }
+
+    foreach ($count as $word => $freq) {
+        $rev = strrev($word);
+
+        if ($word === $rev) {
+            // Symmetric word like 'aa'
+            $pair = intdiv($freq, 2);
+            $result += $pair * 4;
+
+            // Check if we can use one as the center
+            if ($freq % 2 === 1 && !$centerUsed) {
+                $result += 2;
+                $centerUsed = true;
+            }
+        } elseif (strcmp($word, $rev) < 0 && isset($count[$rev])) {
+            // Asymmetric and only count one direction to avoid double counting
+            $pair = min($count[$word], $count[$rev]);
+            $result += $pair * 4;
+        }
+    }
+
+    return $result;
+}
+
+$words = ["lc","cl","gg"];
+echo longestPalindrome($words); // Output: 6
