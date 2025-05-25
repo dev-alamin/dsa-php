@@ -122,3 +122,32 @@ function countVowelSubstrings(string $word): int {
 
     return $count;
 }
+
+// 2942. Find Words Containing Character
+function findWordsContaining($words, $x) {
+    $n = count($words);
+    $val = [];
+
+    for ($i = 0; $i < $n; $i++) {
+        $word = $words[$i];
+        $found = false;
+
+        // Loop through each character in the word
+        for ($j = 0; $j < strlen($word); $j++) {
+            if ($word[$j] === $x) {
+                $found = true;
+                break; // No need to continue once found
+            }
+        }
+
+        if ($found) {
+            $val[] = $i;
+        }
+    }
+
+    return $val;
+}
+
+$words = ["apple", "banana", "cherry", "date"];
+$x = "a";
+print_r(findWordsContaining($words, $x));
