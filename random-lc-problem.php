@@ -98,3 +98,27 @@ function areNumbersAscending($s) {
     
     return true;
 }
+
+// 2062. Count Vowel Substrings of a String
+function countVowelSubstrings(string $word): int {
+    $n = strlen($word);
+    $count = 0;
+    $vowels = ['a', 'e', 'i', 'o', 'u'];
+
+    // Check all substrings
+    for ($i = 0; $i < $n; $i++) {
+        $vowelSet = [];
+        for ($j = $i; $j < $n; $j++) {
+            $char = $word[$j];
+            if (!in_array($char, $vowels)) {
+                break; // stop if non-vowel
+            }
+            $vowelSet[$char] = true;
+            if (count($vowelSet) === 5) {
+                $count++;
+            }
+        }
+    }
+
+    return $count;
+}
