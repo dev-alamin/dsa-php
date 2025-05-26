@@ -152,8 +152,6 @@ $words = ["apple", "banana", "cherry", "date"];
 $x = "a";
 print_r(findWordsContaining($words, $x));
 
-
-
 // 2131. Longest Palindrome by Concatenating Two Letter Words
 /**
  * You are given an array of strings words. 
@@ -205,3 +203,29 @@ function longestPalindrome($words) {
 
 $words = ["lc","cl","gg"];
 echo longestPalindrome($words); // Output: 6
+
+// Find the maximum sum of subarray size of k
+function maxSumSubarrayOfSizeK($arr, $k) {
+    $maxSum = 0;
+    $windowSum = 0;
+    $start = 0;
+    
+    for( $i = 0; $i < count( $arr ); $i++ ) {
+        $windowSum += $arr[$i];
+        
+        if( $i >= $k - 1 ) {
+            $maxSum = max( $maxSum, $windowSum );
+            
+            $windowSum -= $arr[$start];
+            
+            $start++;
+        }
+    }
+    
+    return $maxSum;
+}
+
+// Test
+$arr = [2, 1, 5, 1, 3, 2];
+$k = 3;
+echo maxSumSubarrayOfSizeK($arr, $k); // Output: 9
