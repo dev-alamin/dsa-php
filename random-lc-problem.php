@@ -230,7 +230,7 @@ $arr = [2, 1, 5, 1, 3, 2];
 $k = 3;
 echo maxSumSubarrayOfSizeK($arr, $k); // Output: 9
 
-// 3364. Minimum Positive Sum Subarray 
+// 643. Maximum Average Subarray I
 // Level: Easy, Topics: Sliding Window, Prefix Sum
 function findMaxAverage($arr, $k) {
     $maxSum = PHP_INT_MIN;
@@ -262,3 +262,27 @@ $nums = [8860,-853,6534,4477,-4589,8646,-6155,-5577,-1656,-5779,
 -4348,-5891];
 $k = 93;
 echo findMaxAverage($nums, $k);
+
+// 209. Minimum Size Subarray Sum
+// Level: Medium, Topics: Sliding Window, Prefix Sum
+function minSubArrayLen($target, $nums) {
+    $n = count($nums);
+    $minLength = PHP_INT_MAX;
+    $windowSum = 0;
+    $start = 0;
+    
+    for( $i = 0; $i < $n; $i++ ) {
+        $windowSum += $nums[$i];
+        
+        while( $target <= $windowSum ) {
+            $minLength = min($minLength, $i - $start + 1 );
+            
+            $windowSum -= $nums[$start];
+            $start++;
+        }
+    }
+    
+    return $minLength === PHP_INT_MAX ? 0 : $minLength;
+}
+
+print_r( minSubArrayLen( 11, [1,1,1,1,1,1,1,1] ) );
