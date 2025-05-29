@@ -265,6 +265,14 @@ echo findMaxAverage($nums, $k);
 
 // 209. Minimum Size Subarray Sum
 // Level: Medium, Topics: Sliding Window, Prefix Sum
+/*
+ * | Type                      | Use `for` only | Use `for` + `while` |
+ * | ------------------------- | -------------- | ------------------- |
+ * | Fixed window size         | ✅              | ❌                   |
+ * | Dynamic window condition  | ❌              | ✅                   |
+ * | Goal: max sum of size k   | ✅              | ❌                   |
+ * | Goal: min length ≥ target | ❌              | ✅                   |
+ *  */
 function minSubArrayLen($target, $nums) {
     $n = count($nums);
     $minLength = PHP_INT_MAX;
@@ -286,3 +294,70 @@ function minSubArrayLen($target, $nums) {
 }
 
 print_r( minSubArrayLen( 11, [1,1,1,1,1,1,1,1] ) );
+
+// 5. Longest Palindromic Substring
+// Given a string s, return the longest palindromic substring in s.
+
+function longestPalindrome2($s) {
+    $n = strlen($s);
+    if ($n < 2) return $s;
+
+    $start = 0;
+    $maxLen = 1;
+
+    for ($i = 0; $i < $n; $i++) {
+        // Odd length palindrome
+        expandAroundCenter($s, $i, $i, $start, $maxLen);
+
+        // Even length palindrome
+        expandAroundCenter($s, $i, $i + 1, $start, $maxLen);
+    }
+
+    return substr($s, $start, $maxLen);
+}
+
+function expandAroundCenter($s, $left, $right, &$start, &$maxLen) {
+    $n = strlen($s);
+    while ($left >= 0 && $right < $n && $s[$left] === $s[$right]) {
+        $left--;
+        $right++;
+    }
+
+    $len = $right - $left - 1;
+    if ($len > $maxLen) {
+        $start = $left + 1;
+        $maxLen = $len;
+    }
+}
+
+
+$s = "babad";
+
+print_r( longestPalindrome2($s) );
+
+function addStrings($num1, $num2) {
+    $i = strlen($num1) - 1;
+    $j = strlen($num2) - 1;
+    $carry = 0;
+    $result = '';
+
+    while ($i >= 0 || $j >= 0 || $carry > 0) {
+        $digit1 = $i >= 0 ? ord($num1[$i]) - ord('0') : 0;
+        $digit2 = $j >= 0 ? ord($num2[$j]) - ord('0') : 0;
+
+        $sum = $digit1 + $digit2 + $carry;
+        $carry = intdiv($sum, 10);
+        $digit = $sum % 10;
+
+        $result = $digit . $result;
+
+        $i--;
+        $j--;
+    }
+
+    return $result;
+}
+
+echo addStrings("11", "123"); // Output: "134"
+echo addStrings("456", "77"); // Output: "533"
+echo addStrings("0", "0");    // Output: "0"
