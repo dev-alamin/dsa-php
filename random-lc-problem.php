@@ -361,3 +361,62 @@ function addStrings($num1, $num2) {
 echo addStrings("11", "123"); // Output: "134"
 echo addStrings("456", "77"); // Output: "533"
 echo addStrings("0", "0");    // Output: "0"
+
+// 273. Integer to English Words
+// Level: Hard, Topics: Math, String, Recursion
+// Convert a non-negative integer num to its English words representation
+function numberToWords($num) {
+    if ($num == 0) return "Zero";
+
+    $below_20 = [
+        "", "One", "Two", "Three", 
+        "Four", "Five", "Six", "Seven", "Eight", 
+        "Nine", "Ten", "Eleven", "Twelve", "Thirteen", 
+        "Fourteen", "Fifteen", "Sixteen", 
+        "Seventeen", "Eighteen", "Nineteen"
+    ];
+    
+    $tens = [
+        "", "", "Twenty", "Thirty", "Forty", 
+        "Fifty", "Sixty", "Seventy", "Eighty", 
+        "Ninety"
+    ];
+
+    $thousands = ["", "Thousand", "Million", "Billion"];
+
+    /**
+     * Helper function to convert numbers less than 1000 to words
+     * @param int $n
+     * @return string
+     * This function recursively converts numbers to words
+     * It handles numbers from 0 to 999
+     * It uses the $below_20 and $tens arrays to map numbers to words
+     * It returns a string representation of the number
+     * It handles hundreds, tens, and units separately
+     * It trims any extra space before returning the result
+     */
+    $helper = function ($n) use (&$helper, $below_20, $tens) {
+        if ($n == 0) return "";
+        elseif ($n < 20) return $below_20[$n] . " "; // Single digit or teens
+        elseif ($n < 100) return $tens[intval($n / 10)] . " " . $helper($n % 10); // Tens
+        else return $below_20[intval($n / 100)] . " Hundred " . $helper($n % 100); // Hundreds
+    };
+
+    $res = "";
+    $i = 0;
+
+    while ($num > 0) {
+        
+        if ($num % 1000 != 0) {
+            $res = $helper($num % 1000) . $thousands[$i] . " " . $res; // Process each group of three digits
+        }
+
+        $num = intval($num / 1000); // Remove the last three digits
+        $i++;
+    }
+
+    return trim(preg_replace('/\s+/', ' ', $res));
+}
+
+$num = 1234567;
+print_r( numberToWords( $num ) );
