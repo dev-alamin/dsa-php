@@ -368,6 +368,8 @@ echo addStrings("0", "0");    // Output: "0"
 function numberToWords($num) {
     if ($num == 0) return "Zero";
 
+    // We put an empty string at the start to make indexing easier
+    // e.g. $below_20[1] will give "One", $below_20[2] will give "Two"
     $below_20 = [
         "", "One", "Two", "Three", 
         "Four", "Five", "Six", "Seven", "Eight", 
@@ -376,12 +378,16 @@ function numberToWords($num) {
         "Seventeen", "Eighteen", "Nineteen"
     ];
     
+    // We put two empty elements at the start to make indexing easier
+    // e.g. $tens[2] will give "Twenty", $tens[3] will give "Thirty"
     $tens = [
         "", "", "Twenty", "Thirty", "Forty", 
         "Fifty", "Sixty", "Seventy", "Eighty", 
         "Ninety"
     ];
 
+    // We put an empty string at the start to make indexing easier
+    // e.g. $thousands[1] will give "Thousand", $thousands[2] will give "Million"
     $thousands = ["", "Thousand", "Million", "Billion"];
 
     /**
@@ -397,21 +403,27 @@ function numberToWords($num) {
      */
     $helper = function ($n) use (&$helper, $below_20, $tens) {
         if ($n == 0) return "";
-        elseif ($n < 20) return $below_20[$n] . " "; // Single digit or teens
-        elseif ($n < 100) return $tens[intval($n / 10)] . " " . $helper($n % 10); // Tens
-        else return $below_20[intval($n / 100)] . " Hundred " . $helper($n % 100); // Hundreds
+        elseif ($n < 20) return $below_20[$n] . " "; // Single digit or teens e.g. 7 -> "Seven", 15 -> "Fifteen"
+        elseif ($n < 100) return $tens[intval($n / 10)] . " " . $helper($n % 10); // Tens e.g. 42 -> "Forty Two"
+        else return $below_20[intval($n / 100)] . " Hundred " . $helper($n % 100); // Hundreds e.g. 123 -> "One Hundred Twenty Three
     };
 
     $res = "";
     $i = 0;
 
+    // Process the number in groups of three digits
+    // How it becomes three digits: is by dividing the number by 1000
+    // e.g. 1234567 becomes 1234 (first iteration) and then 1 (second iteration)
+    // The loop continues until the number is reduced to 0
+    // The $i variable keeps track of the current group of three digits
+    // e.g. 0 -> "", 1 -> "Thousand", 2 -> "Million", 3 -> "Billion"
     while ($num > 0) {
         
         if ($num % 1000 != 0) {
             $res = $helper($num % 1000) . $thousands[$i] . " " . $res; // Process each group of three digits
         }
-
-        $num = intval($num / 1000); // Remove the last three digits
+        
+        $num = intval($num / 1000); // Remove the last three digits, e.g 1234567 becomes 1234
         $i++;
     }
 
