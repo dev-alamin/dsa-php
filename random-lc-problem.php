@@ -422,7 +422,7 @@ function numberToWords($num) {
         if ($num % 1000 != 0) {
             $res = $helper($num % 1000) . $thousands[$i] . " " . $res; // Process each group of three digits
         }
-        
+
         $num = intval($num / 1000); // Remove the last three digits, e.g 1234567 becomes 1234
         $i++;
     }
@@ -432,3 +432,87 @@ function numberToWords($num) {
 
 $num = 1234567;
 print_r( numberToWords( $num ) );
+
+class NumberToWord {
+    private $below_twenty = [
+        '','one', 'two', 'three',
+        'four', 'five', 'six', 'seven',
+        'eight', 'nine', 'ten', 'eleven',
+        'twelve', 'thirteen', 'fourteen',
+        'fifteen', 'sixteen', 'seventeen',
+        'eighteen', 'nineteen'
+    ];
+
+    private $teens = [
+        '', '', 'twenty', 'thirty', 'forty',
+        'fifty', 'sixty', 'seventy', 'eighty', 'ninety'
+    ];
+
+    private $thousands = [
+        '', 'thousand', 'millioin', 'billion'
+    ];
+
+    private function helper($n) {
+        if( $n == 0 ) return '';
+        if( $n < 20 ) return $this->below_twenty[$n] . " ";
+        if( $n < 100 ) return $this->teens[intval($n/10)] . " " . $this->helper( $n % 10 );
+        else return $this->below_twenty[intval($n/100)] . " hundred " . $this->helper( $n % 100 );
+    } 
+
+    public function convert( $n ){
+        $i = 0;
+        $res = '';
+
+        while( $n > 0 ) {
+            if( $n % 1000 != 0 ) {
+                $res = $this->helper( $n % 1000 ) . $this->thousands[$i] . " " . $res;
+            }
+
+            $n = intval( $n / 1000 );
+            $i++;
+        }
+
+        return $res;
+    }
+}
+
+// 2068. Check Whether Two Strings are Almost Equivalent
+// Two strings word1 and word2 are considered almost equivalent 
+// if the differences between the frequencies of each letter from 'a' to 'z' between word1 and word2 is at most 3.
+// Given two strings word1 and word2, each of length n, return true if word1 and word2 are almost equivalent, or false otherwise.
+// The frequency of a letter x is the number of times it occurs in the string.
+function checkAlmostEquivalent($word1, $word2) {
+    $map1 = [];
+    $map2 = [];
+    
+    for( $i = 0; $i < strlen( $word1 ); $i++ ) {
+         $map1[$word1[$i]] = ( $map1[$word1[$i]] ?? 0 ) + 1;
+    }
+    
+    
+    for( $i = 0; $i < strlen( $word2 ); $i++ ) {
+       $map2[$word2[$i]] = ($map2[$word2[$i]] ?? 0 ) + 1;
+    }
+    
+    $allKeys = array_unique(array_merge(array_keys($map1), array_keys($map2))); // Get all unique characters from both maps
+
+    // Check the frequency difference for each character
+    // If the difference is greater than 3, return false
+    // If the character is not present in one of the maps, its frequency is considered 0
+    // This ensures we check all characters from both strings
+    foreach ($allKeys as $char) {
+        $freq1 = $map1[$char] ?? 0;
+        $freq2 = $map2[$char] ?? 0;
+
+        if (abs($freq1 - $freq2) > 3) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+$word1 = "aaaa";
+$word2 = "bccb";
+
+print_r( checkAlmostEquivalent($word1, $word2) );
