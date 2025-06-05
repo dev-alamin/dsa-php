@@ -516,3 +516,51 @@ $word1 = "aaaa";
 $word2 = "bccb";
 
 print_r( checkAlmostEquivalent($word1, $word2) );
+
+// 345. Reverse Vowels of a String
+// Level: Easy, Topics: Two Pointers, String
+// Given a string s, reverse only all the vowels in the string and return it.
+// The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both lower and upper cases, more than once.
+function reverseVowels($s) {
+    $vowels = array_flip( ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'] );    
+    $l = 0;
+    $r = strlen( $s ) - 1;
+    
+    while( $l < $r ) {
+        // this is because we need to cehck if only vowels are present
+        // if not, we need to skip the character
+        if( ! array_key_exists( $s[$l], $vowels ) ) {
+            $l++;
+            continue;
+        }
+        
+        if( ! array_key_exists( $s[$r], $vowels ) ) {
+            $r--;
+            continue;
+        }
+
+        /** 
+        * Swap the vowels
+        * We use list destructuring to swap the values in a single line
+        * This is a shorthand way to swap two variables in PHP
+        * It is equivalent to:
+        * $temp = $s[$l];
+        * $s[$l] = $s[$r];
+        * $s[$r] = $temp;
+        * But more concise and readable
+        * It also avoids the need for a temporary variable
+        * This is a common pattern in PHP to swap two values
+        * It is a good practice to use list destructuring when swapping values
+        * It makes the code cleaner and easier to understand
+        * It is also more efficient than using a temporary variable
+        */
+        [$s[$l], $s[$r]] = [$s[$r], $s[$l] ];
+
+        $l++;
+        $r--;
+    }
+    
+    return $s;
+}
+
+echo reverseVowels("leetcode"); // Output: "leotcede"
