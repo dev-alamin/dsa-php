@@ -564,3 +564,39 @@ function reverseVowels($s) {
 }
 
 echo reverseVowels("leetcode"); // Output: "leotcede"
+
+// 383. Ransom Note
+// Level: Easy, Topics: Hash Table String Counting
+// Given two strings ransomNote and magazine, return true 
+// if ransomNote can be constructed by using the letters from magazine and false otherwise.
+// Each letter in magazine can only be used once in ransomNote.
+function canConstruct($ransomNote, $magazine) {
+    $magazineMap = [];
+
+    // Count letters in magazine
+    foreach (str_split($magazine) as $char) {
+        $magazineMap[$char] = ( $magazineMap[$char] ?? 0 ) + 1;
+    }
+
+    // Check if ransomNote can be built
+    foreach (str_split($ransomNote) as $char) {
+
+        // The (inventory) runs out when we decrement the count to zero
+        // If we try to decrement a character that is not present in the magazine, it will return false
+        if (empty($magazineMap[$char])) {
+            return false;
+        }
+        // Important things here is
+        // we are decrementing the count of the character
+        // This ensures that we do not use the same character more than it appears in the magazine
+        // For example, if magazine has "a" only once, we cannot use it twice in ransomNote
+        // This is common technique in problems where we need to check if one string can be formed from another
+        $magazineMap[$char]--;
+    }
+
+    return true;
+}
+
+$ransomNote = "aa";
+$magazine = "aab";
+print_r( canConstruct($ransomNote, $magazine) ); // Output: true
