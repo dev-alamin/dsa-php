@@ -600,3 +600,41 @@ function canConstruct($ransomNote, $magazine) {
 $ransomNote = "aa";
 $magazine = "aab";
 print_r( canConstruct($ransomNote, $magazine) ); // Output: true
+
+// 434. Number of Segments in a String
+// Level: Easy, Topics: String, Counting
+// Given a string s, return the number of segments in the string.
+// A segment is defined to be a contiguous sequence of non-space characters.
+function countSegments($s) {
+    $rgx = preg_replace( '/\s+/', ' ', $s );
+    if( $rgx === " " ) return 0;
+    
+    $n = strlen( $rgx );
+    $sentence = [];
+    $word = '';
+    
+    for( $i = 0; $i < $n; $i++ ) {
+        // var_dump(  $rgx[$i] == ' ' );
+        
+        if( $rgx[$i] != ' ' ) {
+        $word .= $rgx[$i];
+        }else{
+            $sentence[] = $word;
+            $word = '';
+            // echo 'No space';
+        }
+    }
+    
+    if( $word != '' ) {
+        $sentence[] = $word;
+    }
+    
+    $count = 0;
+    foreach( $sentence as $word ) {
+        if( ! empty( $word ) ) {
+            $count++;
+        }
+    }
+    
+    return $count;
+}
