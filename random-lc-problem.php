@@ -638,3 +638,60 @@ function countSegments($s) {
     
     return $count;
 }
+
+// 1002. Find Common Characters
+// Given a string array words, return an array of all characters 
+// that show up in all strings within the words (including duplicates). 
+// You may return the answer in any order.
+function commonChars($words) {
+    $freq = array_count_values( str_split( $words[0] ) );
+    
+    for( $i = 0; $i < count( $words ); $i++ ) {
+        $currentFreq = array_count_values( str_split( $words[$i] ) );
+        
+        foreach( $freq as $char => $count ) {
+            if( isset( $currentFreq[$char] ) ) {
+                /**
+                * Update the frequency to the minimum count found so far
+                * --This ensures that we only keep characters that are present in all strings
+                * --------------------------------------------------------------------------
+                * For example, if 'a' appears 3 times in the first string and 2 times in the second string,
+                * --we will keep it 2 times in the result
+                * --This is because we want to find common characters, so we take the minimum count
+                * --This is a common technique in problems where we need to find common elements in multiple arrays
+                */
+                $freq[$char] = min($count, $currentFreq[$char]);
+            }else{
+                /**
+                 * If the character is not present in the current string,
+                 * we remove it from the frequency array
+                 * This ensures that we only keep characters that are present in all strings
+                 */
+                unset($freq[$char]);
+            }
+        }
+    }
+    
+    $res = [];
+    /**
+     * We need to return the characters in the frequency array
+     * This is done by iterating over the frequency array
+     * and adding each character to the result array
+     * This is because we need to return the characters in the same order as they appear in the frequency array
+     * This is a common technique in problems where we need to return elements based on their frequency
+     * This is also known as "expanding" the frequency array into a result array
+     * For example, if the frequency array is ['a' => 2, 'b' => 3],
+     * --we will return ['a', 'a', 'b', 'b', 'b']
+     */
+    foreach( $freq  as $char => $count ) {
+        for( $i = 0; $i < $count; $i++ ) {
+            $res[] = $char;
+        }
+    }
+    
+    return $res;
+}
+
+$words = ["bella","label","roller"];
+
+print_r( commonChars($words) );
