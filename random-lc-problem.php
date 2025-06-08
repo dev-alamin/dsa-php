@@ -638,15 +638,16 @@ function countSegments($s) {
     
     return $count;
 }
-
-// 1002. Find Common Characters
-// Given a string array words, return an array of all characters 
-// that show up in all strings within the words (including duplicates). 
-// You may return the answer in any order.
+ /**
+ * 1002. Find Common Characters
+ * Given a string array words, return an array of all characters 
+ * --that show up in all strings within the words (including duplicates). 
+ * --You may return the answer in any order.
+ */
 function commonChars($words) {
     $freq = array_count_values( str_split( $words[0] ) );
     
-    for( $i = 0; $i < count( $words ); $i++ ) {
+    for( $i = 1; $i < count( $words ); $i++ ) {
         $currentFreq = array_count_values( str_split( $words[$i] ) );
         
         foreach( $freq as $char => $count ) {
@@ -672,7 +673,6 @@ function commonChars($words) {
         }
     }
     
-    $res = [];
     /**
      * We need to return the characters in the frequency array
      * This is done by iterating over the frequency array
@@ -683,6 +683,7 @@ function commonChars($words) {
      * For example, if the frequency array is ['a' => 2, 'b' => 3],
      * --we will return ['a', 'a', 'b', 'b', 'b']
      */
+    $res = [];
     foreach( $freq  as $char => $count ) {
         for( $i = 0; $i < $count; $i++ ) {
             $res[] = $char;
