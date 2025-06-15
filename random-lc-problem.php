@@ -696,3 +696,55 @@ function commonChars($words) {
 $words = ["bella","label","roller"];
 
 print_r( commonChars($words) );
+
+/**
+ * 228. Summary Ranges
+ * Given a sorted integer array without duplicates,
+ * return the summary of its ranges.
+ * A range [a,b] is represented as a string "a->b" if a != b,
+ * or "a" if a == b.
+ * SumaryRanges
+ *
+ * @param Array $nums
+ * @return array
+ */
+function summaryRanges( $nums ) : array
+{
+    $res = [];
+    $n = count( $nums );
+    $start = $nums[0];
+    
+    // Iterate through the array to find ranges
+    // We use a for loop to iterate through the array
+    // We have checked <= $n to ensure we don't go out of bounds
+    for( $i = 1; $i <= $n; $i++ ) {
+        /**
+        * If we reach the end of the array or the current number is not consecutive
+        * We check if the current number is not equal to the previous number + 1
+        * If it is not, we have found a range
+        * We then set the end of the range to the previous number
+        * We then check if the start and end are the same
+        * If they are the same, we add the start to the result
+        * If they are not the same, we add the range in the format "start->end"
+        */
+        if( $i === $n || $nums[$i] != $nums[$i-1]+1 ) {
+            $end = $nums[$i-1];
+            
+            if( $start === $end ) {
+                $res[] = (string)$start;
+            }else{
+                $res[] = "$start->$end";
+            }
+            
+            // If we have reached the end of the array, we set the start to the current number
+            // This is to ensure that we start a new range from the current number
+            if( $i < $n ) {
+                $start = $nums[$i];
+            }
+        }
+        
+    }
+    return $res;
+}
+
+print_r( summaryRanges( [0,1,2,4,5,7] ) );
