@@ -714,29 +714,31 @@ function summaryRanges( $nums ) : array
     $n = count( $nums );
     $start = $nums[0];
     
-    // Iterate through the array to find ranges
-    // We use a for loop to iterate through the array
-    // We have checked <= $n to ensure we don't go out of bounds
+    /**
+    * Iterate through the array to find ranges
+    * We use a for loop to iterate through the array
+    * We have checked <= $n to ensure we don't go out of bounds
+    */
     for( $i = 1; $i <= $n; $i++ ) {
         /**
         * If we reach the end of the array or the current number is not consecutive
-        * We check if the current number is not equal to the previous number + 1
-        * If it is not, we have found a range
+        * ---We check if the current number is not equal to the previous number + 1
+        * ---If it is not, we have found a range
         * We then set the end of the range to the previous number
         * We then check if the start and end are the same
-        * If they are the same, we add the start to the result
-        * If they are not the same, we add the range in the format "start->end"
+        * ---If they are the same, we add the start to the result
+        * ---If they are not the same, we add the range in the format "start->end"
         */
         if( $i === $n || $nums[$i] != $nums[$i-1]+1 ) {
             $end = $nums[$i-1];
             
             if( $start === $end ) {
-                $res[] = (string)$start;
+                $res[] = (string)$start; // This is an individual number, not a range
             }else{
-                $res[] = "$start->$end";
+                $res[] = "$start->$end"; // This is a range, e.g. "1->5"
             }
             
-            // If we have reached the end of the array, we set the start to the current number
+            // If we haven't reached the end, set new start for next range
             // This is to ensure that we start a new range from the current number
             if( $i < $n ) {
                 $start = $nums[$i];
@@ -748,3 +750,30 @@ function summaryRanges( $nums ) : array
 }
 
 print_r( summaryRanges( [0,1,2,4,5,7] ) );
+
+/**
+ * 1984. Find the Maximum Possible Difference Between Two Elements in an Array
+ * Given an array of integers nums, find the maximum possible difference between two elements in the array.
+ * The maximum possible difference is defined as the absolute difference between two elements in the array.
+ * If the array contains less than two elements, return -1.
+ * * Example:
+ * Input: nums = [1,5,3,9,2]
+ * Output: 8
+ *
+ * @param array $nums
+ * @return int
+ */
+function maximumDifference($nums) : int {
+    $minVal = $nums[0];
+    $maxDiff = -1;
+
+    for ($i = 1; $i < count($nums); $i++) {
+        if ($nums[$i] > $minVal) {
+            $maxDiff = max($maxDiff, $nums[$i] - $minVal);
+        } else {
+            $minVal = $nums[$i];
+        }
+    }
+
+    return $maxDiff;
+}
