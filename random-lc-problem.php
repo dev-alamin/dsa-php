@@ -777,3 +777,16 @@ function maximumDifference($nums) : int {
 
     return $maxDiff;
 }
+
+// 9. Palindrome Number
+function isPalindrome($x) {
+    if ($x < 0) return false;
+
+    $str = strval($x);
+    return $str === strrev($str);
+}
+
+// Example:
+var_dump(isPalindrome(121));  // true
+var_dump(isPalindrome(-121)); // false
+var_dump(isPalindrome(10));   // false
