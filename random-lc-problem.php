@@ -695,7 +695,7 @@ function commonChars($words) {
 
 $words = ["bella","label","roller"];
 
-print_r( commonChars($words) );
+print_r( commonChars($words) ); // Output: ["e","l","l"]
 
 /**
  * 228. Summary Ranges
@@ -790,3 +790,41 @@ function isPalindrome($x) {
 var_dump(isPalindrome(121));  // true
 var_dump(isPalindrome(-121)); // false
 var_dump(isPalindrome(10));   // false
+
+// 2591. Distribute Money to Maximum Children
+// Level: Easy, Topics: Greedy, Math
+
+/** * You are given an integer money, the total amount of money you have to distribute.
+ * You are also given an integer children, the number of children you need to distribute the money to.
+ * You need to distribute the money according to the following rules:
+ * 1. Each child gets at least 1 dollar.
+ * 2. Each child gets at most 8 dollars.
+ * 3. You cannot give any child more than 8 dollars.
+ * Return the maximum number of children who can receive exactly 8 dollars.
+ * If it is not possible to distribute the money according to the rules, return -1.
+ * @param int $money
+ * @param int $children
+ * @return int
+ */
+function distMoney($money, $children) {
+    $money -= $children;
+    if ($money < 0){
+        return -1;
+    }
+
+    $mc = floor($money / 7);
+    $mca = $money % 7;
+    if ($mc == $children && $mca == 0){
+        return $children;
+    }
+    if (($mc) == ($children - 1) && $mca == 3){
+        return $children - 2;
+    }
+
+    return min($children - 1, $mc);
+}
+
+
+$money = 20;
+$children = 3;
+print_r( distMoney($money, $children) );
