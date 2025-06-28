@@ -814,9 +814,36 @@ function distMoney($money, $children) {
 
     $mc = floor($money / 7);
     $mca = $money % 7;
+
+    /**
+     * If we have exactly 3 children and the money left is 0,
+     * we can give each child 8 dollars, so we return the number of children.
+     * This is because we can give each child at least 1 dollar.
+     * If we have 3 children and the money left is 0, we can give
+     * each child 8 dollars, so we return the number of children.
+     * This is a special case where we have exactly 3 children and the money left is 0.
+     * We need to handle this case separately because it is not possible to give
+     * each child more than 8 dollars.
+     * This is a common technique in problems where we need to handle special cases separately
+     * This is also known as "edge case" handling
+     * It is important to handle edge cases separately because they can cause unexpected behavior
+     * If we don't handle edge cases separately, we can end up with incorrect results
+     */
     if ($mc == $children && $mca == 0){
         return $children;
     }
+
+    /**
+     * If we have exactly 3 children and the money left is 3,
+     * we cannot give them 8 dollars each, so we return -1.
+     * This is because we cannot give any child more than 8 dollars.
+     * If we have 3 children and the money left is 3, we can give
+     * 2 children 8 dollars each and 1 child 3 dollars.
+     * This is because we can give each child at least 1 dollar.
+     * So we return 1 in this case.
+     * This is a special case where we have exactly 3 children and the money left is 3.
+     * We need to handle this case separately because it is not possible to give
+     */
     if (($mc) == ($children - 1) && $mca == 3){
         return $children - 2;
     }
@@ -824,7 +851,80 @@ function distMoney($money, $children) {
     return min($children - 1, $mc);
 }
 
-
 $money = 20;
 $children = 3;
 print_r( distMoney($money, $children) );
+
+class Play {
+    // This function is like trying all possible ways to arrange the given choices
+    public function backtrack( array $path, array $choices ) {
+        
+        // If no choices left, we have formed one complete path — print it
+        if( count( $choices ) === 0 ) {
+            print_r( $path );  // Think of it like "I found one full combination!"
+            return;
+        }
+
+        // Loop through each available choice
+        for( $i = 0; $i < count( $choices ); $i++ ) {
+
+            // Make a copy of current path and add one choice to it
+            // Like: "Let me try picking this option next"
+            $newPath = $path;
+            $newPath[] = $choices[$i];
+
+            // Make a copy of choices and remove the one we just picked
+            // So that we don't pick the same one again in this path
+            $newChoices = $choices;
+            array_splice( $newChoices, $i, 1 );
+
+            // Go deeper with new path and reduced choices
+            // Like: "Okay, what's next after picking this one?"
+            $this->backtrack( $newPath, $newChoices );
+        }
+    }
+
+    public function subsets($nums, $path = [], $index = 0) {
+        print_r($path); // print the current subset
+
+        for ($i = $index; $i < count($nums); $i++) {
+            $path[] = $nums[$i];           // choose
+            $this->subsets($nums, $path, $i + 1); // explore
+            array_pop($path);              // backtrack
+        }
+    }
+}
+
+$numbers = [1,2,3];
+(new Play())->backtrack( [], $numbers );
+
+// 2099. Find Subsequence of Length K With the Largest Sum
+/**
+ * MaxSubsequence
+*
+* You are given an integer array nums and an integer k. 
+* You want to find a subsequence of nums of length k that has the largest sum.
+* 
+* Return any such subsequence as an integer array of length k.
+* 
+* A subsequence is an array that can be derived from another array 
+* by deleting some or no elements without changing the order of the remaining elements.
+**/
+function maxSubsequence($nums, $k) {
+    if( $k === count( $nums ) ) return $nums;
+    
+    $copy = $nums;
+    rsort( $copy );
+    
+    $freq = array_count_values( array_splice( $copy, 0, $k ) );
+    
+    $res = [];
+    foreach( $nums as $num ) {
+        if( isset( $freq[$num] ) && $freq[$num] > 0 ) {
+            $res[] = $num;
+            $freq[$num]--;
+        }
+    }
+    
+    return $res;
+}
