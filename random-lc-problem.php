@@ -928,3 +928,8 @@ function maxSubsequence($nums, $k) {
     
     return $res;
 }
+
+// Example usage:
+$nums = [3, 2, 5, 1, 6, 4];
+$k = 3;
+print_r(maxSubsequence($nums, $k)); // Output: [5, 6, 4] or any other subsequence of length 3 with the largest sum
