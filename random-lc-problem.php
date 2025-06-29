@@ -933,3 +933,38 @@ function maxSubsequence($nums, $k) {
 $nums = [3, 2, 5, 1, 6, 4];
 $k = 3;
 print_r(maxSubsequence($nums, $k)); // Output: [5, 6, 4] or any other subsequence of length 3 with the largest sum
+
+// 1498. Number of Subsequences That Satisfy the Given Sum Condition
+/** * Given an array of integers nums and an integer target, 
+ * return the number of non-empty subsequences of nums such that the sum of the minimum and maximum element on it is less or equal to target.
+ * Since the answer may be too large, return it modulo 109 + 7
+ * @param array $nums
+ * @param int $target
+ * @return int
+ */
+function numSubseq($nums, $target) {
+    sort($nums);
+    $mod = 1e9 + 7;
+    $n = count($nums);
+    
+    // Precompute powers of 2
+    $pow = array_fill(0, $n, 1);
+    for ($i = 1; $i < $n; $i++) {
+        $pow[$i] = ($pow[$i - 1] * 2) % $mod;
+    }
+
+    $left = 0;
+    $right = $n - 1;
+    $res = 0;
+
+    while ($left <= $right) {
+        if ($nums[$left] + $nums[$right] <= $target) {
+            $res = ($res + $pow[$right - $left]) % $mod;
+            $left++;
+        } else {
+            $right--;
+        }
+    }
+
+    return $res;
+}
