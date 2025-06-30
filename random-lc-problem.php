@@ -968,3 +968,70 @@ function numSubseq($nums, $target) {
 
     return $res;
 }
+
+// Example usage:
+$nums = [3, 5, 6, 7];
+$target = 9;
+print_r(numSubseq($nums, $target)); // Output: 4
+
+// 557. Reverse Words in a String III
+// Level: Easy, Topics: String, Two Pointers
+/**
+ * Given a string s, reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.
+ * @param string $s
+ * @return string
+ */
+function reverseWords($s) {
+    $arr = explode(' ', $s);
+    $res = [];
+    foreach ($arr as $index => $word) {
+        $letter = str_split($word);
+        for ($i = count($letter) - 1; $i >= 0; $i--) {
+            $res[] = $letter[$i];
+        }
+        if ($index < count($arr) - 1) {
+            $res[] = ' ';
+        }
+    }
+    return implode("", $res);
+}
+
+// Example usage:
+$example = "Let's take LeetCode contest";
+print_r(reverseWords($example)); // Output: "s'teL ekat
+
+
+// Problem: 455. Assign Cookies
+// Level: Easy, Topics: Greedy, Sorting
+/** * Assume you are an awesome parent and want to give your children some cookies.
+ * But, you should give each child at most one cookie.
+ * Each child i has a greed factor g[i],
+ * which is the minimum size of a cookie that the child will be content with;
+ * and each cookie j has a size s[j].
+ * If s[j] >= g[i], we can assign the cookie j to the child i
+ * The goal is to maximize the number of your content children and output the maximum number.
+ * @param array $g // greed factor of children
+ * @param array $s // size of cookies
+ * @return int // maximum number of content children
+ */
+function findContentChildren($g, $s) {
+    sort($g); // greed list
+    sort($s); // cookie sizes
+
+    $i = 0; // kid index
+    $j = 0; // cookie index
+
+    while ($i < count($g) && $j < count($s)) {
+        if ($s[$j] >= $g[$i]) {
+            $i++; // kid is happy, go to next kid
+        }
+        $j++; // try next cookie anyway
+    }
+
+    return $i; // number of happy kids
+}
+
+// Example usage:
+$g = [1, 2, 3]; // greed factors of children
+$s = [1, 1]; // sizes of cookies
+print_r(findContentChildren($g, $s)); // Output: 1 (only one child can be content with the available cookies)
