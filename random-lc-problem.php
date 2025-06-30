@@ -1060,3 +1060,30 @@ function intersection($nums1, $nums2) {
 $nums1 = [1, 2, 2, 1];
 $nums2 = [2, 2];
 print_r(intersection($nums1, $nums2)); // Output: [2]
+
+// 392. Is Subsequence
+// Level: Easy, Topics: Two Pointers, String
+/** * Given two strings s and t, return true if s is a subsequence of t,
+ * or false otherwise.
+ * A subsequence of a string is a new string that is formed from the original string by
+ * deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters.
+ * (i.e., "ace" is a subsequence of "abcde" while "aec" is not).
+ * @param string $s
+ * @param string $t
+ * @return bool
+ */
+function isSubsequence($s, $t) {
+    $sIdx = 0;
+    $tIdx = 0;
+    while ($sIdx < strlen($s) && $tIdx < strlen($t)) {
+        if ($s[$sIdx] === $t[$tIdx]) {
+            $sIdx++;
+        }
+        $tIdx++;
+    }
+    return $sIdx === strlen($s);
+}
+// Example usage:
+$s = "abc";
+$t = "ahbgdc";
+print_r(isSubsequence($s, $t)); // Output: true
