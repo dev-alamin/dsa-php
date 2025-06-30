@@ -1035,3 +1035,28 @@ function findContentChildren($g, $s) {
 $g = [1, 2, 3]; // greed factors of children
 $s = [1, 1]; // sizes of cookies
 print_r(findContentChildren($g, $s)); // Output: 1 (only one child can be content with the available cookies)
+
+// 349. Intersection of Two Arrays
+// Level: Easy, Topics: Hash Table, Two Pointers
+/** * Given two integer arrays nums1 and nums2, return an array of their intersection.
+ * Each element in the result must be unique and you may return the result in any order.
+ * @param array $nums1
+ * @param array $nums2
+ * @return array
+ */
+function intersection($nums1, $nums2) {
+    $set1 = array_flip($nums1);
+    $seen = [];
+
+    foreach ($nums2 as $num) {
+        if (isset($set1[$num])) {
+            $seen[$num] = true;
+        }
+    }
+
+    return array_keys($seen);
+}
+// Example usage:
+$nums1 = [1, 2, 2, 1];
+$nums2 = [2, 2];
+print_r(intersection($nums1, $nums2)); // Output: [2]
