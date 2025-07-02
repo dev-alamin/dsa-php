@@ -1117,3 +1117,29 @@ function largestNumber($nums) {
 $nums = [10, 2];
 print_r(largestNumber($nums)); // Output: "210"
 
+// 215. Kth Largest Element in an Array
+// Level: Medium, Topics: Array, Divide and Conquer, Quickselect
+/** * Given an integer array nums and an integer k, return the kth largest element in the array.
+ * Note that it is the kth largest element in the sorted order, not the kth distinct element.
+ * You must solve it in O(n) time complexity.
+ * @param array $nums
+ * @param int $k
+ * @return int
+ */
+function findKthLargest($nums, $k) {
+    $heap = new SplMinHeap();
+
+    foreach ($nums as $num) {
+        $heap->insert($num);
+        if ($heap->count() > $k) {
+            $heap->extract(); // remove the smallest
+        }
+    }
+
+    return $heap->top(); // the k-th largest element
+}
+
+// Example usage:
+$nums = [3, 2, 1, 5, 6, 4];
+$k = 2;
+print_r(findKthLargest($nums, $k)); // Output: 5
