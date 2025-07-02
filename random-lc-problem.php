@@ -1087,3 +1087,33 @@ function isSubsequence($s, $t) {
 $s = "abc";
 $t = "ahbgdc";
 print_r(isSubsequence($s, $t)); // Output: true
+
+// 179. Largest Number
+// Level: Medium, Topics: Sorting, Greedy
+/** * Given a list of non-negative integers nums, arrange them such that they form the largest
+ * possible number and return it as a string.
+ * Since the result may be very large, you need to return a string instead of an integer
+ * @param array $nums
+ * @return string
+ */
+function largestNumber($nums) {
+    // Convert numbers to strings for concatenation
+    $strs = array_map('strval', $nums);
+
+    // Custom sort using concatenation
+    usort($strs, function($a, $b) {
+        return strcmp($b . $a, $a . $b);
+    });
+
+    // Edge case: if the highest number is "0", all are zero
+    if ($strs[0] === "0") {
+        return "0";
+    }
+
+    return implode('', $strs);
+}
+
+// Example usage:
+$nums = [10, 2];
+print_r(largestNumber($nums)); // Output: "210"
+
