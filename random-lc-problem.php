@@ -1143,3 +1143,36 @@ function findKthLargest($nums, $k) {
 $nums = [3, 2, 1, 5, 6, 4];
 $k = 2;
 print_r(findKthLargest($nums, $k)); // Output: 5
+
+// 1876. Substrings of Size Three with Distinct Characters
+// Level: Easy, Topics: String, Sliding Window
+/** * A substring is a contiguous sequence of characters within a string.
+ * Given a string s, return the number of substrings of size three with all distinct characters.
+ * Note that the number of substrings with all distinct characters is the same as the number of
+ * substrings of size three with all distinct characters.
+ * @param string $s
+ * @return int
+ */
+function countGoodSubstrings($s) {
+    $seen = [];
+    $n = strlen( $s );
+    $start = 0;
+    $count = 0;
+    
+    for( $i = 0; $i < $n; $i++ ) {
+        $char = $s[$i];
+        
+        if( isset( $seen[$char] ) && $seen[$char] >= $start ) {
+            $start = $seen[$char] + 1;
+        }
+        
+        $seen[$char] = $i;
+        
+        $len = $i - $start + 1;
+        
+        if( $len >= 3 ) $count++;
+
+    }
+    
+    return $count;
+}
