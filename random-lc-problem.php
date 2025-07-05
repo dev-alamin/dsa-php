@@ -1280,3 +1280,28 @@ function longestAlternatingSubarray($nums, $th) {
 $nums = [1, 3, 5, 7, 9];
 $threshold = 10;
 print_r(longestAlternatingSubarray($nums, $threshold)); // Output: 0
+
+// Contest Question: Partition String
+function partitionString($s) {
+    $seen = [];
+    $segments = [];
+    $n = strlen($s);
+    $buffer = '';
+
+    for ($i = 0; $i < $n; $i++) {
+        $buffer .= $s[$i];
+
+        // If current buffer has NOT been seen before
+        if (!isset($seen[$buffer])) {
+            $segments[] = $buffer;
+            $seen[$buffer] = true;
+            $buffer = ''; // reset for next segment
+        }
+    }
+
+    return $segments;
+}
+
+// Example usage:
+$s = "abacaba";
+print_r(partitionString($s)); // Output: ["a", "b", "ac", "ab"];
