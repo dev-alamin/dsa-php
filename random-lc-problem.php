@@ -1215,7 +1215,8 @@ print_r(divisorSubstrings($num, $k)); // Output: 2 (substrings "24" and "40" are
 
 // 1394. Find Lucky Integer in an Array
 // Level: Easy, Topics: Array, Hash Table, Counting
-/** * Given an array of integers arr, a lucky integer is an integer that has a frequency
+/**
+ *  Given an array of integers arr, a lucky integer is an integer that has a frequency
  * equal to its value.
  * Return the largest lucky integer in the array.
  * If there is no lucky integer return -1.
@@ -1223,12 +1224,59 @@ print_r(divisorSubstrings($num, $k)); // Output: 2 (substrings "24" and "40" are
  * @return int
  */
 function findLucky($arr) {
-    $freq = array_count_values($arr);
-    $lucky = -1;
-    foreach ($freq as $num => $count) {
-        if ($num === $count) {
-            $lucky = max($lucky, $num);
+    $freq = array_count_values( $arr );
+    $largest = PHP_INT_MIN;
+    
+    foreach( $freq as $key => $number ) {
+        if( $key === $number ) {
+            if( $number > $largest ) {
+                $largest = $number;
+            }
         }
     }
-    return $lucky;
+    
+    return $largest === PHP_INT_MIN ? -1 : $largest;
 }
+
+// 2760. Longest Even Odd Subarray With Threshold
+// Level: Medium, Topics: Array, Sliding Window, testcase: 6873
+/** * Given an integer array nums and an integer threshold, return the length of the longest subarray
+ * such that the absolute difference between the maximum and minimum element in the subarray is less than or equal to threshold.
+ * A subarray is a contiguous non-empty sequence of elements within an array.
+ * @param array $nums
+ * @param int $threshold
+ * @return int
+ */
+function longestAlternatingSubarray($nums, $th) {
+    $n = count( $nums );
+    $currentLength = 0; 
+    $prev = 0;
+    $maxLen = 0;
+    
+    for( $i = 0; $i < $n; $i++ ) {
+        if( $nums[$i] % 2 === 0 && $nums[$i] <= $th ) {
+            $currentLength = 1;
+            $prev = $nums[$i];
+            
+            $j = $i + 1;
+            
+            while( $j < $n ) {
+                if( $nums[$j] > $th ) break;
+                if( $nums[$j] % 2 == 0 && $prev % 2 == 0 ) break;
+                
+                $currentLength++;
+                $prev = $nums[$j];
+                $j++;
+            }
+            
+            $maxLen = max( $maxLen, $currentLength );
+        }
+    }
+    
+    return $maxLen;
+}
+
+// Example usage:
+$nums = [1, 3, 5, 7, 9];
+$threshold = 10;
+print_r(longestAlternatingSubarray($nums, $threshold)); // Output: 0
