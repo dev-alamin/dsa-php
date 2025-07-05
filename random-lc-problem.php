@@ -1212,3 +1212,23 @@ function divisorSubstrings($num, $k) {
 $num = 240;
 $k = 2;
 print_r(divisorSubstrings($num, $k)); // Output: 2 (substrings "24" and "40" are divisible by 2)
+
+// 1394. Find Lucky Integer in an Array
+// Level: Easy, Topics: Array, Hash Table, Counting
+/** * Given an array of integers arr, a lucky integer is an integer that has a frequency
+ * equal to its value.
+ * Return the largest lucky integer in the array.
+ * If there is no lucky integer return -1.
+ * @param array $arr
+ * @return int
+ */
+function findLucky($arr) {
+    $freq = array_count_values($arr);
+    $lucky = -1;
+    foreach ($freq as $num => $count) {
+        if ($num === $count) {
+            $lucky = max($lucky, $num);
+        }
+    }
+    return $lucky;
+}
