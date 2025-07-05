@@ -1176,3 +1176,39 @@ function countGoodSubstrings($s) {
     
     return $count;
 }
+
+// 2269. Find the K-Beauty of a Number
+// Level: Easy, Topics: String, Math, Sliding Window
+/** * The k-beauty of a number is defined as the number of substrings of
+ * length k that are divisible by k.
+ * Given an integer num and an integer k, return the k-beauty of num.
+ * Note:
+ * A substring is a contiguous sequence of digits in the decimal representation of num.
+ * Leading zeros are allowed in substrings.
+ * For example, 01 is a valid substring of 0123.
+ * @param int $num
+ * @param int $k
+ * @return int
+ */
+function divisorSubstrings($num, $k) {
+    $n = strlen( $num );
+    $count = 0;
+    
+    for( $i = 0; $i < $n; $i++ ) {
+        $klength = substr( $num, $i, $k );
+        
+        if( strlen( $klength ) < $k ) continue;
+        if( $klength == 0 ) continue;
+        
+        if($num % $klength == 0) {
+            $count++;
+        }
+    }
+    
+    return $count;
+}
+
+// Example usage:
+$num = 240;
+$k = 2;
+print_r(divisorSubstrings($num, $k)); // Output: 2 (substrings "24" and "40" are divisible by 2)
