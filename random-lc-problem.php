@@ -1305,3 +1305,334 @@ function partitionString($s) {
 // Example usage:
 $s = "abacaba";
 print_r(partitionString($s)); // Output: ["a", "b", "ac", "ab"];
+
+// Problem Number: 2242
+// Power Grid Maintenance©leetcode
+// Level: Hard, Topics: Graph, BFS, Union Find
+/** * You are given an integer c, the number of stations in a power grid.
+ * You are also given a 2D array connections, where connections[i] = [u, v]
+ * represents a connection between station u and station v.
+ * You are also given a 2D array queries, where queries[i] = [type, x].
+ * - If type = 1, you need to find the first station in the grid that is online and has a grid_id equal to x.
+ * - If type = 2, you need to turn off the station with grid_id x.
+ * Return an array of integers, where the i-th element is the result of the i-th query.
+ * If there is no station that satisfies the query, return -1.
+ * Note: A station is online if it has not been turned off.
+ * A grid_id is assigned to each station based on the connected components in the power grid.
+ * The grid_id is a unique identifier for each connected component.
+ * The grid_id is assigned in such a way that all stations in the same connected component have the same grid_id.
+ * The grid_id is assigned in increasing order starting from 0.
+ * The grid_id is assigned based on the order of the stations in the connections array.
+ * The grid_id is assigned in such a way that all stations in the same connected component have the same grid_id.
+ * */
+class Solution {
+
+    /**
+     * @param Integer $c
+     * @param Integer[][] $connections
+     * @param Integer[][] $queries
+     * @return Integer[]
+     */
+    function processQueries($c, $connections, $queries) {
+        $adj = array_fill(1, $c + 1, []);
+        foreach ($connections as [$u, $v]) {
+            $adj[$u][] = $v;
+            $adj[$v][] = $u;
+        }
+
+        // 1. Assign grid_id to each station
+        $grid_id = array_fill(1, $c + 1, -1);
+        $grids = [];
+        $visited = array_fill(1, $c + 1, false);
+        $gid = 0;
+
+        for ($i = 1; $i <= $c; $i++) {
+            if (!$visited[$i]) {
+                $queue = [$i];
+                $visited[$i] = true;
+                $grids[$gid] = [];
+
+                while ($queue) {
+                    $cur = array_pop($queue);
+                    $grid_id[$cur] = $gid;
+                    $grids[$gid][] = $cur;
+
+                    foreach ($adj[$cur] as $nei) {
+                        if (!$visited[$nei]) {
+                            $visited[$nei] = true;
+                            $queue[] = $nei;
+                        }
+                    }
+                }
+
+                sort($grids[$gid]); // keep sorted
+                $gid++;
+            }
+        }
+
+        // 2. Prepare online flags and pointer for each grid
+        $online = array_fill(1, $c + 1, true);
+        $grid_pointer = array_fill(0, count($grids), 0);
+
+        $res = [];
+
+        foreach ($queries as [$type, $x]) {
+            if ($type === 2) {
+                $online[$x] = false;
+            } else {
+                if ($online[$x]) {
+                    $res[] = $x;
+                } else {
+                    $gid = $grid_id[$x];
+                    $g = $grids[$gid];
+                    $ptr = &$grid_pointer[$gid];
+
+                    while ($ptr < count($g) && !$online[$g[$ptr]]) {
+                        $ptr++;
+                    }
+
+                    if ($ptr < count($g)) {
+                        $res[] = $g[$ptr];
+                    } else {
+                        $res[] = -1;
+                    }
+                }
+            }
+        }
+
+        return $res;
+    }
+}
+
+// Example usage:$c = 5;
+$connections = [[1, 2], [2, 3], [4, 5]];
+$queries = [[1, 1], [2, 2], [1, 2], [1, 4], [2, 4], [1, 4], [1, 5]];
+$solution = new Solution();
+print_r($solution->processQueries(5, $connections, $queries)); // Output:
+// [1, -1, 3, 4, -1, 5]
+
+// Validate coupon code
+// Problem: Validate Coupons
+// Level: Easy, Topics: Array, String, Sorting
+/** * Given three arrays code, businessLine, and isActive,
+ * validate the coupons based on the following criteria:
+ * 1. The code must be non-empty and valid (alphanumeric + _ only).
+ * 2. The businessLine must be one of the allowed categories: ["electronics", "grocery", "pharmacy", "restaurant"].
+ * 3. The isActive must be true.
+ * Return an array of valid coupon codes sorted by businessLine priority and then lexicographically by code.
+ * The priority of businessLine is as follows: ["electronics", "grocery", "pharmacy", "restaurant"].
+ * If a coupon is valid, it should be included in the result.
+ * The result should only contain the code values, not the entire coupon object.
+ * @param array $code
+ * @param array $businessLine
+ * @param array $isActive
+ * @return array
+ */
+function validateCoupons($code, $businessLine, $isActive) {
+    $n = count($code);
+    $allowedCategories = ["electronics", "grocery", "pharmacy", "restaurant"];
+    $categoryOrder = array_flip($allowedCategories); // gives priority
+
+    $validCoupons = [];
+
+    for ($i = 0; $i < $n; $i++) {
+        $currentCode = $code[$i];
+        $currentCategory = $businessLine[$i];
+        $active = $isActive[$i];
+
+        // 1. Check if code is non-empty and valid (alphanumeric + _ only)
+        if ($currentCode === '' || !preg_match('/^[a-zA-Z0-9_]+$/', $currentCode)) {
+            continue;
+        }
+
+        // 2. Check if businessLine is allowed
+        if (!in_array($currentCategory, $allowedCategories)) {
+            continue;
+        }
+
+        // 3. Check if active
+        if (!$active) {
+            continue;
+        }
+
+        // All valid, add to result
+        $validCoupons[] = [
+            'code' => $currentCode,
+            'category' => $currentCategory
+        ];
+    }
+
+    // Sort by category order and then lexicographically by code
+    usort($validCoupons, function ($a, $b) use ($categoryOrder) {
+        $catA = $categoryOrder[$a['category']];
+        $catB = $categoryOrder[$b['category']];
+
+        if ($catA === $catB) {
+            return strcmp($a['code'], $b['code']);
+        }
+        return $catA - $catB;
+    });
+
+    // Return only the code values
+    return array_map(function ($item) {
+        return $item['code'];
+    }, $validCoupons);
+}
+
+// Example usage:
+$code = ["COUPON1", "COUPON2", "COUPON3", "COUPON4"];
+$businessLine = ["electronics", "grocery", "pharmacy", "restaurant"];
+$isActive = [true, false, true, true];
+print_r(validateCoupons($code, $businessLine, $isActive)); // Output: ["COUPON1", "COUPON3", "COUPON4"]
+
+//  Minimum Time for K Connected Components©leetcode
+// Level: Medium, Topics: Graph, BFS, Union Find
+/** * You are given an integer n, the number of nodes in a graph.
+ * You are also given a 2D array edges, where edges[i] = [u, v] represents an edge between nodes u and v.
+ * You are also given an integer k, the number of connected components you want to create.
+ * You need to find the minimum time required to create k connected components in the graph.
+ * The time required to create a connected component is equal to the number of edges in that component.
+ * Return the minimum time required to create k connected components.
+ * If it is not possible to create k connected components, return -1.
+ * Note: A connected component is a subgraph in which any two nodes are connected to each other by paths,
+ * and which is connected to no additional nodes in the supergraph.
+ * A connected component is a maximal connected subgraph.
+ * A connected component is a subgraph in which any two nodes are connected to each other by paths,
+ * and which is connected to no additional nodes in the supergraph.
+ * */
+class MinTime {
+
+    /**
+     * @param Integer $n
+     * @param Integer[][] $edges
+     * @param Integer $k
+     * @return Integer
+     */
+    function minTimeToSplit($n, $edges, $k) {
+        $poltracine = [$n, $edges, $k]; // as requested
+
+        $lo = 0;
+        $hi = 0;
+        foreach ($edges as $e) {
+            $hi = max($hi, $e[2]);
+        }
+
+        $answer = -1;
+
+        while ($lo <= $hi) {
+            $mid = intval(($lo + $hi) / 2);
+            $components = $this->countComponents($n, $edges, $mid);
+
+            if ($components >= $k) {
+                $answer = $mid;
+                $hi = $mid - 1;
+            } else {
+                $lo = $mid + 1;
+            }
+        }
+
+        return $answer;
+    }
+
+    private function countComponents($n, $edges, $timeLimit) {
+        $uf = new UnionFind($n);
+
+        foreach ($edges as [$u, $v, $time]) {
+            if ($time > $timeLimit) {
+                $uf->union($u, $v);
+            }
+        }
+
+        return $uf->countComponents();
+    }
+}
+
+class UnionFind {
+    private $parent;
+    private $rank;
+    private $count;
+
+    public function __construct($n) {
+        $this->parent = range(0, $n - 1);
+        $this->rank = array_fill(0, $n, 0);
+        $this->count = $n;
+    }
+
+    public function find($x) {
+        if ($this->parent[$x] !== $x) {
+            $this->parent[$x] = $this->find($this->parent[$x]);
+        }
+        return $this->parent[$x];
+    }
+
+    public function union($x, $y) {
+        $px = $this->find($x);
+        $py = $this->find($y);
+        if ($px === $py) return;
+
+        if ($this->rank[$px] < $this->rank[$py]) {
+            $this->parent[$px] = $py;
+        } elseif ($this->rank[$px] > $this->rank[$py]) {
+            $this->parent[$py] = $px;
+        } else {
+            $this->parent[$py] = $px;
+            $this->rank[$px]++;
+        }
+
+        $this->count--;
+    }
+
+    public function countComponents() {
+        return $this->count;
+    }
+}
+
+// Example usage:
+$n = 5;
+$edges = [[0, 1, 1], [1, 2, 2], [2, 3, 3], [3, 4, 4]];
+$k = 2;
+$solution = new MinTime();
+print_r($solution->minTimeToSplit($n, $edges, $k)); // Output: 3 (minimum time to create 2 connected components)
+
+
+// 16. 3Sum Closest
+// Level: Medium, Topic: Array, Sorting, Two Pointer
+
+/**
+ * @param array $nums
+ * @param Integer $target
+ * @return Integer
+ */
+function threeSumClosest($nums, $target) {
+    sort($nums);
+    $n = count($nums);
+    $closestSum = $nums[0] + $nums[1] + $nums[2];
+    
+    for ($i = 0; $i < $n - 2; $i++) {
+        $left = $i + 1;
+        $right = $n - 1;
+        
+        while ($left < $right) {
+            $currentSum = $nums[$i] + $nums[$left] + $nums[$right];
+            
+            // If we found exact match, return immediately
+            if ($currentSum == $target) {
+                return $currentSum;
+            }
+            
+            // Update closest sum if current is closer to target
+            if (abs($currentSum - $target) < abs($closestSum - $target)) {
+                $closestSum = $currentSum;
+            }
+            
+            // Move pointers based on comparison with target
+            if ($currentSum < $target) {
+                $left++;
+            } else {
+                $right--;
+            }
+        }
+    }
+    
+    return $closestSum;
+}
