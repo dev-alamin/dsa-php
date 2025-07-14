@@ -1636,3 +1636,40 @@ function threeSumClosest($nums, $target) {
     
     return $closestSum;
 }
+
+// 2410. Maximum Matching of Players With Trainers
+// Level: medium, topics: array, two pointer, greedy, sorting
+
+function matchPlayersAndTrainers($players, $trainers) {
+    // We sort because for weak players = low cap trainer
+    // And more required players = high cap trainer
+    sort( $players );
+    sort( $trainers );
+    
+    $n = count( $players );
+    $m = count( $trainers );
+
+    $i = 0; // Player index
+    $j = 0; // Trainer index
+    $count = 0;
+    
+    while( $n > $i && $j < $m ) {
+        // Constrain: players requirements <= trainer capacity
+       if( $players[$i] <= $trainers[$j] ) {
+        // Match found
+           $count++;
+           $i++;
+           $j++;
+       }else{
+        // Trainer too weak, try next trainer
+           $j++;
+       }
+    }
+    
+    return $count;
+}
+
+$players = [4, 7, 9];
+$trainers = [8, 2, 5, 8];
+
+echo matchPlayersAndTrainers($players, $trainers); // Output: 3
