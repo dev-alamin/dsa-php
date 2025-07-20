@@ -1673,3 +1673,33 @@ $players = [4, 7, 9];
 $trainers = [8, 2, 5, 8];
 
 echo matchPlayersAndTrainers($players, $trainers); // Output: 3
+
+// 930. Binary subarrays with sum
+// Given a binary array nums and an integer goal, return the number of non-empty subarrays with a sum goal.
+// A subarray is a contiguous part of the array.
+/**
+ * @param Integer[] $nums
+ * @param Integer $goal
+ * @return Integer
+ */
+function numSubarraysWithSum($nums, $goal) {
+    $count = 0;
+    $prefixSum = 0;
+    $prefixSums = [0 => 1]; // prefix sum = 0 occurred once
+
+    foreach ($nums as $num) {
+        $prefixSum += $num;
+
+        if (isset($prefixSums[$prefixSum - $goal])) {
+            $count += $prefixSums[$prefixSum - $goal];
+        }
+
+        if (isset($prefixSums[$prefixSum])) {
+            $prefixSums[$prefixSum]++;
+        } else {
+            $prefixSums[$prefixSum] = 1;
+        }
+    }
+
+    return $count;
+}
