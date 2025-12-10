@@ -1703,3 +1703,25 @@ function numSubarraysWithSum($nums, $goal) {
 
     return $count;
 }
+
+function reverseOnlyLetters($s) {
+    $chars = str_split($s);
+    $l = 0;
+    $r = count($chars) - 1;
+
+    while ($l < $r) {
+        if (!ctype_alpha($chars[$l])) {
+            $l++;
+        } elseif (!ctype_alpha($chars[$r])) {
+            $r--;
+        } else {
+            $tmp = $chars[$l];
+            $chars[$l] = $chars[$r];
+            $chars[$r] = $tmp;
+            $l++;
+            $r--;
+        }
+    }
+
+    return implode('', $chars);
+}
