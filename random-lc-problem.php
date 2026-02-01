@@ -1767,4 +1767,29 @@ function findKlargest($arr, $k) {
     return $large;
 }
 
+// Sliding window technique
+function maximumSubArraySum($arr, $k) {
+    $n = count( $arr );
+    if( $n < $k ) return 0; // Edge case to handle smaller element, exit early
+    
+    $maxSum = 0;
+    $currentSum = 0;
+    
+    // get the first window to easy slide next time comparison
+    for( $i = 0; $i < $k; $i++ ) {
+        $currentSum += $arr[$i];
+    }
+    
+    // This is a tricky way to assign maxSum like we do for finding largest element    
+    $maxSum = $currentSum;
+
+    // Here is the actual addition and subtracting, one from back, adding from front
+    for( $i = $k; $i < $n; $i++ ) {
+        $currentSum = $currentSum + $arr[$i] - $arr[$i-$k];
+        $maxSum = max( $maxSum, $currentSum );
+    }
+    
+    return $maxSum;
+}
+
 print_r( findKlargest( $arr, $k ) );
