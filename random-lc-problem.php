@@ -1725,3 +1725,46 @@ function reverseOnlyLetters($s) {
 
     return implode('', $chars);
 }
+
+
+
+$arr = [2, 1, 5, 1, 3, 2,6,2,4,7,8,1,3,4];
+$k = 3;
+
+// Find the kth largest element in an array
+function findKlargest($arr, $k) {
+    $n = count( $arr );
+    $hash = [];
+    
+    // Outer loop, start from very first index, and go till Kth boundary, 
+    // If the elements less than k then its not valid in terms of constant K element
+    for( $i = 0; $i <= $n - $k; $i++ ) {
+        $sum = 0;
+        
+        // Inner loop, sum up the total kth element in every iteration.
+        // as inner runs its all elements  for every outer iteration
+        // so kth elements can be summed up using sum+= index i and j
+        
+        // So core idea of addition and inner outer loop is,
+        // $i indicates the starting position, and j moves forward till $k
+        // , so every iteration, $sum holds the sum and then ads to hashmap
+        for( $j = 0; $j < $k; $j++ ) {
+            $sum+= $arr[$i+$j];
+        }
+        
+        // Group sum im hashmap
+        $hash[] = $sum;
+    }
+    
+    // typical finding largest from arry
+    $large = PHP_INT_MIN;
+    foreach( $hash as $n ) {
+        if( $n > $large ) {
+            $large = $n;
+        }
+    }
+    
+    return $large;
+}
+
+print_r( findKlargest( $arr, $k ) );
