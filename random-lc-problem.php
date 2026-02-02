@@ -1767,6 +1767,41 @@ function findKlargest($arr, $k) {
     return $large;
 }
 
+Technically we can do the comparison game more way once we have sub: 
+function maxSubArraySum( $arr, $k ) {
+    $n = count( $arr );
+    $max = PHP_INT_MIN;
+    $hash = [];
+    
+    for( $i = 0; $i <= $n - $k; $i++ ) {
+        $sum = 0;
+        
+        for( $j = 0; $j < $k; $j++ ) {
+            $sum+= $arr[$i + $j];
+        }
+        
+        // We can do using max
+        // $max = max( $max, $sum);
+        
+        // we can do using simple if statement
+            if( $max < $sum ) {
+                $max = $sum;
+            }
+            
+        $hash[] = $sum;
+        
+    }
+    
+    // we can do a simple foreach taking inside an assc array
+    // foreach( $hash as $n ) {
+    //     if( $n > $max ) {
+    //         $max = $n;
+    //     }
+    // }
+    
+    return $max;
+}
+
 // Sliding window technique
 function maximumSubArraySum($arr, $k) {
     $n = count( $arr );
